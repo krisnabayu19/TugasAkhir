@@ -116,21 +116,6 @@ if __name__ == '__main__':
         lower_case = strSplit.lower()
         print("Text Lower Case :",lower_case)
 
-        # converting emoticon
-        # punctuationText = lower_case.translate(str.maketrans('', '', string.punctuation))
-        # tokenized_words = punctuationText.split()
-        # print("Text Tokenizing : ",tokenized_words)
-        # for tokenized_words_emoticon in tokenized_words:
-        #     if tokenized_words_emoticon in emoticon:
-        #
-        #         # Emoticon to array
-        #         tokenized_words_emoticon.append(convert)
-        #         emoticon_list.append(emoticon)
-        #         convert_list.append(convert)
-        #
-        # strText = ' '.join(tokenized_words_emoticon)
-        # print("Emoticon Convert : ", emoticon_list, "->", convert_list)
-
         # convert emoticon process
         punctuationText = lower_case.translate(str.maketrans('', '', string.punctuation))
         tokenized_words = punctuationText.split()
