@@ -29,6 +29,8 @@ stopwords = []
 stopwords_list = []
 
 
+
+
 def _connect_mongo(host, port, username, password, db):
     """ A util for making a connection to mongo """
 
@@ -69,11 +71,19 @@ if __name__ == '__main__':
     # get data from database MongoDB
     df = read_mongo('tweetsKotor', 'tweetsKotorTest2', {})
 
-    # open emoticon convert list
-    with open('EmojiCategory-People.csv', 'r', encoding='utf-8') as fileEmoticon:
-        for lineEmoticon in fileEmoticon:
-            clear_line_emoticon = lineEmoticon.replace("\n", '').strip()
-            emoticon, convert = clear_line_emoticon.split(',')
+
+
+    # # open emoticon convert list
+    # with open('EmojiCategory-People.csv', 'r', encoding='utf-8') as fileEmoticon:
+    #     emoticon_list = []
+    #     convert_emoticon_list = []
+    #     for lineEmoticon in fileEmoticon:
+    #         clear_line_emoticon = lineEmoticon.replace("\n", '').strip()
+    #         emoticon, convert = clear_line_emoticon.split(',')
+    #         emoticon_list.append(emoticon)
+    #         convert_emoticon_list.append(convert)
+
+
 
     # open stop words list
     with open('stopwordsfix.csv', 'r') as file:
@@ -86,9 +96,9 @@ if __name__ == '__main__':
 
         text = row['text']
         final_words = []
+        tokenized_words_emoticon = []
         after_stopwords = []
-        emoticon_list = []
-        convert_list = []
+
 
         # cleaning process
         gas = text.strip()
@@ -107,27 +117,46 @@ if __name__ == '__main__':
         print("Text Lower Case :",lower_case)
 
         # converting emoticon
+        # punctuationText = lower_case.translate(str.maketrans('', '', string.punctuation))
+        # tokenized_words = punctuationText.split()
+        # print("Text Tokenizing : ",tokenized_words)
+        # for tokenized_words_emoticon in tokenized_words:
+        #     if tokenized_words_emoticon in emoticon:
+        #
+        #         # Emoticon to array
+        #         tokenized_words_emoticon.append(convert)
+        #         emoticon_list.append(emoticon)
+        #         convert_list.append(convert)
+        #
+        # strText = ' '.join(tokenized_words_emoticon)
+        # print("Emoticon Convert : ", emoticon_list, "->", convert_list)
+
+        # convert emoticon process
         punctuationText = lower_case.translate(str.maketrans('', '', string.punctuation))
         tokenized_words = punctuationText.split()
-        print("Text Tokenizing : ",tokenized_words)
-        if emoticon in tokenized_words:
+        for tokenized_words_emoticon in tokenized_words:
+            arrayTokenizingEmoticon = []
+            arrayTokenizingEmoticon.append(tokenized_words_emoticon)
 
-            # Emoticon to array
-            tokenized_words.append(convert)
-            emoticon_list.append(emoticon)
-            convert_list.append(convert)
-
-        strText = ' '.join(tokenized_words)
-        print("Emoticon Convert : ", emoticon_list, "->", convert_list)
+            with open('EmojiCategory-People.csv', 'r',encoding='utf-8') as fileEmoticon:
+                for lineEmoticon in fileEmoticon:
+                    clear_line_emoticon = lineEmoticon.replace("\n", '').strip()
+                    emoticon, convert = clear_line_emoticon.split(',')
+                    if emoticon in arrayTokenizingEmoticon:
+                        tokenized_words.append(convert)
+        strEmoticonConvert = ' '.join(tokenized_words)
+        print("Text Emoticon Convert :",strEmoticonConvert)
 
         # stemming process
-        hasilStemmer = stemmer.stem(strText)
+        hasilStemmer = stemmer.stem(strEmoticonConvert)
         print("Text Stemming :",hasilStemmer)
 
         # stop words process
         punctuationText2 = hasilStemmer.translate(str.maketrans('', '', string.punctuation))
         tokenized_words2 = punctuationText2.split()
         for tokenized_words3 in tokenized_words2:
+            # print(tokenized_words3)
+            # print(stopwords)
             if tokenized_words3 not in stopwords:
                 stopwords_list.append(stopwords)
                 after_stopwords.append(tokenized_words3)
